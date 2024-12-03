@@ -12,6 +12,8 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { Droplet, HomeIcon, ReceiptText, Smartphone, User, UserRoundPen } from 'lucide-react'
+
 
 // This is sample data.
 const data = {
@@ -24,27 +26,34 @@ const data = {
         {
           title: "Home",
           url: "#",
+          icon: HomeIcon,
+          isActive: true,
         },
         {
           title: "Costumer List",
           url: "#",
-          isActive: true,
+          icon: User,
+
         },
         {
           title: "Billing",
           url: "#",
+          icon: ReceiptText
         },
         {
           title: "Water Usage",
           url: "#",
+          icon: Droplet
         },
         {
           title: "Sms Management",
-          url: "#",
+          url: "",
+          icon: Smartphone
         },
         {
           title: "Profile",
           url: "#",
+          icon: UserRoundPen
         },
 
       ],
@@ -70,7 +79,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild isActive={item.isActive}>
-                      <a href={item.url}>{item.title}</a>
+                      <a href={item.url}>
+                        {item.icon && <item.icon className=" h-5 w-5" />}
+                        {item.title}</a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
