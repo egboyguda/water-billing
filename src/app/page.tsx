@@ -6,7 +6,7 @@ export default function Home() {
       <div className="grid auto-rows-min gap-4 md:grid-cols-3">
         <div className="aspect-video rounded-xl bg-blue-500 flex justify-center flex-col items-center" >
           <div className="text-white text-center ">
-            <h1 className="text-4xl font-bold">Costumer</h1>
+            <h1 className="text-4xl font-bold">Customer</h1>
             <p className="text-3xl font-medium">0</p>
           </div>
         </div>
