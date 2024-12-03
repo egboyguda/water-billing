@@ -21,7 +21,7 @@ export function AddCotumerModal() {
                 <DialogHeader>
                     <DialogTitle>Add Customer</DialogTitle>
                     <DialogDescription>
-                        Work In-progess u cant save data. Click save when you're done.
+                        Work In-progess u cant save data. Click save when you&apos;re done.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">

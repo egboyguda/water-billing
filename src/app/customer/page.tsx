@@ -15,7 +15,7 @@ export default function Costumer() {
             <AddCotumerModal />
         </div>
         <div className="min-h-[100vh] flex-1 rounded-xl  w-full   md:min-h-min mt-2 space-y-2" >
-            <h2 className="text-2xl  font-light">List of Costumer's</h2>
+            <h2 className="text-2xl  font-light">List of Costumer&apos;s</h2>
             <Table className="bg-slate-50  rounded border-2">
                 <TableHeader>
                     <TableRow>
