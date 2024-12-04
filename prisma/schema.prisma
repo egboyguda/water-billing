@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Replace with your DB provider
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String     @id @default(uuid())
+  email       String     @unique
+  username    String     @unique
+  password    String
+  role        UserRole   // Admin or Customer
+  profile     Profile?   // Optional, linked to a single profile
+  apiKey      ApiKey?    // Optional, specific to customers
+  meters      Meter[]    // A user can have multiple meters
+  bills       Bill[]     // A user can have multiple bills
+  payments    Payment[]  // A user can make multiple payments
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Profile {
+  id          String    @id @default(uuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id])
+  name        String
+  address     String
+  phoneNumber String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model ApiKey {
+  id          String    @id @default(uuid())
+  key         String    @unique @default(uuid()) // API key
+  userId      String    @unique // Each customer can have one API key
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Meter {
+  id         String     @id @default(uuid())
+  serial     String     @unique
+  userId     String
+  user       User       @relation(fields: [userId], references: [id])
+  readings   Reading[]  // A meter will have multiple readings
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Reading {
+  id         String    @id @default(uuid())
+  meterId    String
+  meter      Meter     @relation(fields: [meterId], references: [id])
+  date       DateTime
+  wateUsage  Float     // Water consumption value (e.g., cubic meters)
+  createdAt  DateTime  @default(now())
+}
+
+model Bill {
+  id         String     @id @default(uuid())
+  userId     String
+  user       User       @relation(fields: [userId], references: [id])
+  totalMonthlyUsage Float // Total monthly usage of the bill
+  //readingId  String     @unique
+  //reading    Reading    @relation(fields: [readingId], references: [id])
+  amount     Float      // Total amount of the bill
+  dueDate    DateTime
+  status     String     // "Paid", "Unpaid", "Overdue"
+  payments   Payment[]  // Payments made for this bill
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+
+
+model Payment {
+  id         String     @id @default(uuid())
+  billId     String
+  bill       Bill       @relation(fields: [billId], references: [id])
+  userId     String
+  user       User       @relation(fields: [userId], references: [id])
+  amount     Float      // Payment amount
+  date       DateTime
+  createdAt  DateTime   @default(now())
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+}
