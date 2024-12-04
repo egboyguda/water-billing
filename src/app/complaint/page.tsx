@@ -1,8 +1,10 @@
+import SidabarNav from "@/components/common/sidabar";
 import ComplaintsTabs from "@/components/complaints/tabs";
 
 
 export default function Page() {
-    return (<div>
-        <ComplaintsTabs />
-    </div>);
+    return (
+        <SidabarNav><ComplaintsTabs /></SidabarNav>
+
+    );
 }
