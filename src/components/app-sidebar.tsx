@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { Droplet, HomeIcon, ReceiptText, Smartphone, User, UserRoundPen } from 'lucide-react'
+import { Droplet, HomeIcon, MessageSquareWarning, ReceiptText, Smartphone, User, UserRoundPen } from 'lucide-react'
 import Link from "next/link"
 
 
@@ -38,12 +38,12 @@ const data = {
         },
         {
           title: "Billing",
-          url: "#",
+          url: "/billing",
           icon: ReceiptText
         },
         {
           title: "Water Usage",
-          url: "#",
+          url: "/usage",
           icon: Droplet
         },
         {
@@ -52,10 +52,16 @@ const data = {
           icon: Smartphone
         },
         {
+          title: 'Complaints',
+          url: "/complaint",
+          icon: MessageSquareWarning
+        },
+        {
           title: "Profile",
           url: "#",
           icon: UserRoundPen
         },
+
 
       ],
     },
