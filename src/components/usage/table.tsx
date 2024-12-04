@@ -2,7 +2,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 
 export function UsageTable() {
-    return (<div className="min-h-[100vh] flex-1 rounded-xl w-1/2    md:min-h-min mt-5 space-y-2" >
+    return (<div className="min-h-[100vh] flex-1 rounded-xl md:w-1/2 w-full    md:min-h-min mt-5 space-y-2" >
         <h2 className="text-2xl  font-light">List of Costumer&apos;s and Thier Usage</h2>
         <Table className="bg-slate-50  rounded border-2">
             <TableHeader>

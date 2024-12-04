@@ -50,7 +50,7 @@ const chartConfig = {
 
 export function UsageChart() {
     return (
-        <Card>
+        <Card >
             <CardHeader>
                 <CardTitle>Water Usage Monthly</CardTitle>
                 <CardDescription>January - December 2024</CardDescription>
