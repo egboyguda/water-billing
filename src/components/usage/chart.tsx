@@ -76,7 +76,7 @@ export function UsageChart() {
                             dataKey="visitors"
                             strokeWidth={2}
                             radius={8}
-                            activeIndex={2}
+
 
                         />
                     </BarChart>
