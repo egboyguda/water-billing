@@ -2,12 +2,17 @@
 import { z } from "zod";
 import { compareSync } from "bcrypt-ts";
 import { db } from "@/db";
+import { createSession } from "@/lib/auth";
+
 const loginSchema = z.object({
   username: z.string().min(3),
   password: z.string().min(3),
 });
 interface LoginState {
-  errors: {};
+  errors: {
+    username?: string[];
+    password?: string[];
+  };
 }
 
 export async function loginActions(
@@ -32,7 +37,7 @@ export async function loginActions(
   if (!user) {
     return {
       errors: {
-        username: "username or password is incorrect",
+        username: ["username or password is incorrect"],
       },
     };
   }
@@ -40,12 +45,14 @@ export async function loginActions(
   if (!compareSync(result.data.password, user.password)) {
     return {
       errors: {
-        password: "username or password is incorrect",
+        password: ["username or password is incorrect"],
       },
     };
   }
   //create session
-
+  console.log(compareSync(result.data.password, user.password));
+  const userId = user.id.toString();
+  await createSession(userId);
   return {
     errors: {},
   };

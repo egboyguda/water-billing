@@ -1,6 +1,7 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export type SessionPayload = {
   userId: string;
@@ -33,16 +34,16 @@ export async function decrypt(session: string | undefined = "") {
 }
 
 export async function createSession(userId: string) {
-  const expires = new Date(Date.now() + cookie.duration);
-  const session = await encrypt({
-    userId,
-    expires,
-  });
-  (await cookies()).set("session", session, {
+  const expires = new Date(Date.now() + 60 * 60 * 1000);
+  const session = await encrypt({ userId, expires });
+  const cookieStore = await cookies();
+  cookieStore.set("session", session, {
     httpOnly: true,
     secure: true,
     expires: expires,
     sameSite: "lax",
     path: "/",
   });
+
+  redirect("/");
 }
