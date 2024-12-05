@@ -9,11 +9,6 @@ export type SessionPayload = {
 };
 const key = new TextEncoder().encode(process.env.SECRET);
 
-const cookie = {
-  name: "session",
-  option: { httpOnly: true, secure: true, sameSite: "lax", path: "/" },
-  duration: 24 * 60 * 60 * 1000,
-};
 export async function encrypt(payload: SessionPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
@@ -29,6 +24,7 @@ export async function decrypt(session: string | undefined = "") {
     });
     return payload;
   } catch (error) {
+    console.error(error);
     return null;
   }
 }

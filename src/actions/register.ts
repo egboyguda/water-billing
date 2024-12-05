@@ -101,7 +101,11 @@ export async function registerAction(
       },
     });
   } catch (error) {
-    return { errors: { _form: ["User already exists"] } };
+    if (error instanceof Error) {
+      return { errors: { _form: [error.message] } };
+    } else {
+      return { errors: { _form: ["Something went wrong"] } };
+    }
   }
 
   return {
