@@ -7,11 +7,14 @@ import { db } from "@/db";
 const userSchema = z.object({
   //add a regex
 
-  email: z
-    .string()
-    .email()
-    .regex(/@example.com/, { message: "Invalid email" }),
+  email: z.string().email(),
   password: z
+    .string()
+    .min(4)
+    .regex(/^[a-zA-Z0-9]{3,30}$/, {
+      message: "Password must be between 4 and 30 characters long",
+    }),
+  password1: z
     .string()
     .min(4)
     .regex(/^[a-zA-Z0-9]{3,30}$/, {
@@ -28,20 +31,20 @@ const userSchema = z.object({
       message: "Name must be between 2 and 30 characters long",
     }),
   //phone number
-  phone: z
+  contact: z
     .string()
     .min(10)
-    .max(10)
+    .max(14)
     .regex(/^[0-9]*$/, {
       message: "Phone number must be between 10 and 10 characters long",
     }),
   //address
   address: z
     .string()
-    .min(2)
-    .max(30)
-    .regex(/^[a-zA-Z ]*$/, {
-      message: "Address must be between 2 and 30 characters long",
+    .min(4)
+    .max(50)
+    .regex(/^[a-zA-Z .]*$/, {
+      message: "Address can only contain letters, spaces, and periods.",
     }),
   username: z
     .string()
@@ -57,7 +60,7 @@ interface UserState {
     name?: string[];
     email?: string[];
     password?: string[];
-    phone?: string[];
+    contact?: string[];
     address?: string[];
     _form?: string[];
     username?: string[];
@@ -71,15 +74,26 @@ export async function registerAction(
     email: formData.get("email"),
     password: formData.get("password"),
     name: formData.get("name"),
-    phone: formData.get("phone"),
+    contact: formData.get("contact"),
     address: formData.get("address"),
     username: formData.get("username"),
+    password1: formData.get("password1"),
   });
+
   if (!result.success) {
+    console.log(result.error.flatten().fieldErrors);
     return {
       errors: result.error.flatten().fieldErrors,
     };
   }
+  if (result.data.password !== result.data.password1) {
+    return {
+      errors: {
+        password: ["Passwords do not match"],
+      },
+    };
+  }
+  console.log("called going to try");
   try {
     const user = await db.user.create({
       data: {
@@ -97,17 +111,15 @@ export async function registerAction(
         userId: user.id,
         name: result.data.name,
         address: result.data.address,
-        phoneNumber: result.data.phone,
+        phoneNumber: result.data.contact,
       },
     });
   } catch (error) {
     if (error instanceof Error) {
       return { errors: { _form: [error.message] } };
-    } else {
-      return { errors: { _form: ["Something went wrong"] } };
     }
+    return { errors: { _form: ["Something went wrong"] } };
   }
-
   return {
     errors: {},
   };

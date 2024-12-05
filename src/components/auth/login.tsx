@@ -14,7 +14,7 @@ export default function LoginForm() {
     return (
         <Card className="w-[350px]">
             <CardHeader>
-                <CardTitle>Login</CardTitle>
+                <CardTitle className="text-center">Water Billing System</CardTitle>
                 <CardDescription>Enter your username and password to access your account.</CardDescription>
             </CardHeader>
             <form action={action} >
