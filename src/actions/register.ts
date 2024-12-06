@@ -93,7 +93,7 @@ export async function registerAction(
       },
     };
   }
-  console.log("called going to try");
+
   try {
     const user = await db.user.create({
       data: {

@@ -1,4 +1,4 @@
-import SidabarNav from "@/components/common/sidabar";
+
 import { AddCotumerModal } from "@/components/costomer/addCotumerModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 export default function Costumer() {
     return (
-        <SidabarNav>  <div className="m-4 mt-20 space-y-4">
+        <div className="m-4 mt-20 space-y-4">
 
             <div className="flex justify-between">
                 <div className="flex w-full max-w-sm items-center space-x-2">
@@ -43,5 +43,5 @@ export default function Costumer() {
 
 
             </div>
-        </div></SidabarNav>)
+        </div>)
 }

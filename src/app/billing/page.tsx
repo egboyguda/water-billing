@@ -1,12 +1,12 @@
 
-import SidabarNav from "@/components/common/sidabar";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function Page() {
     return (
-        <SidabarNav><div>
+        <div>
             <div className="m-4 mt-20 space-y-4">
 
                 <div className="flex justify-between">
@@ -46,6 +46,6 @@ export default function Page() {
 
                 </div>
             </div>;
-        </div></SidabarNav>);
-
+        </div>
+    )
 }

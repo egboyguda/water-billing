@@ -67,28 +67,70 @@ const data = {
     },
 
   ],
-}
+  customerNav: [
+    {
+      items: [
+        {
+          title: "Home",
+          url: "/user",
+          icon: HomeIcon,
+          isActive: true,
+        },
+        {
+          title: "Billing",
+          url: "/user/billing",
+          icon: ReceiptText,
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+        },
+        {
+          title: "Water Usage",
+          url: "/user/usage",
+          icon: Droplet
+        },
+        {
+          title: "Complaints",
+          url: "/user/complaint",
+          icon: MessageSquareWarning
+        },
+
+        {
+          title: "Profile",
+          url: "#",
+          icon: UserRoundPen
+        },
+      ],
+    },
+  ],
+}
+interface SidebarProps {
+
+  role: string
+
+}
+export function AppSidebar({ role, ...props }: SidebarProps & React.ComponentProps<typeof Sidebar>) {
+  // Select the appropriate navigation data based on the role.
+  const navData = role === 'admin' ? data.navMain : data.customerNav;
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-
-        <h1 className="text-lg font-bold w-full text-center">Admin Dashboard</h1>
+        <h1 className="text-lg font-bold w-full text-center">
+          {role === 'admin' ? 'Admin Dashboard' : 'Customer Dashboard'}
+        </h1>
       </SidebarHeader>
       <SidebarContent>
-        {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item, index) => (
+        {/* Render the SidebarGroup for the selected navigation data. */}
+        {navData.map((group, index) => (
           <SidebarGroup key={index}>
-
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items.map((item) => (
+                {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild isActive={item.isActive}>
                       <Link href={item.url}>
-                        {item.icon && <item.icon className=" h-5 w-5" />}
-                        {item.title}</Link>
+                        {item.icon && <item.icon className="h-5 w-5" />}
+                        {item.title}
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -99,5 +141,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

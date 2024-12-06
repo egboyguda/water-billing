@@ -1,9 +1,9 @@
-import SidabarNav from "@/components/common/sidabar";
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function Home() {
   return (
-    <SidabarNav><div className="flex flex-1 flex-col gap-4 p-4">
+    <div className="flex flex-1 flex-col gap-4 p-4">
       <div className="grid auto-rows-min gap-4 md:grid-cols-3">
         <div className="aspect-video rounded-xl bg-blue-500 flex justify-center flex-col items-center" >
           <div className="text-white text-center ">
@@ -42,6 +42,6 @@ export default function Home() {
 
 
       </div>
-    </div></SidabarNav>
+    </div>
   );
 }
