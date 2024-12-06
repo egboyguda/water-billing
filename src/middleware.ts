@@ -2,40 +2,48 @@ import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/auth";
 import { cookies } from "next/headers";
 
-// 1. Specify protected and public routes
-
-const protectedRoutes = ["/", "/usage", "/billing", "/complaint", "/customer"];
-const publicRoutes = ["/login"];
+// Define route categories
+const routes = {
+  admin: ["/", "/usage", "/billing", "/complaint", "/customer"],
+  customer: ["/user", "/user/billing", "/user/usage", "/user/complaint"],
+  public: ["/login"],
+};
 
 export default async function middleware(req: NextRequest) {
-  // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
-  const isPublicRoute = publicRoutes.includes(path);
 
-  // 3. Decrypt the session from the cookie
+  // Check route type
+  const isAdminRoute = routes.admin.includes(path);
+  const isPublicRoute = routes.public.includes(path);
+
+  // Get and decrypt the session cookie
   const cookie = (await cookies()).get("session")?.value;
+  const session = cookie ? await decrypt(cookie) : null;
 
-  const session = await decrypt(cookie);
-
-  // 4. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !session?.userId) {
+  // Redirect unauthenticated users on protected routes to /login
+  if (isAdminRoute && session?.role !== "ADMIN") {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  // 5. Redirect to /dashboard if the user is authenticated
-  if (
-    isPublicRoute &&
-    session?.userId &&
-    !req.nextUrl.pathname.startsWith("/")
-  ) {
-    return NextResponse.redirect(new URL("/", req.nextUrl));
+  // Redirect authenticated users on public routes to their dashboard
+  if (isPublicRoute && session?.userId) {
+    const dashboardRoute = session?.role === "ADMIN" ? "/" : "/user";
+    return NextResponse.redirect(new URL(dashboardRoute, req.nextUrl));
   }
 
+  // Allow access to customer-specific routes only for customers
+  const isCustomerRoute = routes.customer.includes(path);
+  if (isCustomerRoute && session?.role !== "CUSTOMER") {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
+  }
+
+  // Continue processing the request
   return NextResponse.next();
 }
 
-// Routes Middleware should not run on
+// Exclude specific routes from middleware
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|otf|eot|css|js)$).*)",
+  ],
 };

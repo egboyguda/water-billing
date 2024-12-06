@@ -109,7 +109,7 @@ interface SidebarProps {
 }
 export function AppSidebar({ role, ...props }: SidebarProps & React.ComponentProps<typeof Sidebar>) {
   // Select the appropriate navigation data based on the role.
-  const navData = role === 'admin' ? data.navMain : data.customerNav;
+  const navData = role === 'ADMIN' ? data.navMain : data.customerNav;
 
   return (
     <Sidebar {...props}>
