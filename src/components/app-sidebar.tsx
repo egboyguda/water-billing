@@ -1,28 +1,35 @@
-import * as React from "react"
+'use client'
+import * as React from "react";
 
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { Droplet, HomeIcon, MessageSquareWarning, ReceiptText, Smartphone, User, UserRoundPen } from 'lucide-react'
-import Link from "next/link"
-
+} from "@/components/ui/sidebar";
+import {
+  Droplet,
+  HomeIcon,
+  MessageSquareWarning,
+  ReceiptText,
+  Smartphone,
+  User,
+  UserRoundPen,
+  LogOut,
+} from "lucide-react";
+import Link from "next/link";
+import { logoutActions } from "@/actions/login";
+import { Button } from "./ui/button";
 
 // This is sample data.
 const data = {
-
   navMain: [
-
     {
-
       items: [
         {
           title: "Home",
@@ -31,41 +38,37 @@ const data = {
           isActive: true,
         },
         {
-          title: "Costumer List",
+          title: "Customer List",
           url: "/customer",
           icon: User,
-
         },
         {
           title: "Billing",
           url: "/billing",
-          icon: ReceiptText
+          icon: ReceiptText,
         },
         {
           title: "Water Usage",
           url: "/usage",
-          icon: Droplet
+          icon: Droplet,
         },
         {
-          title: "Sms Management",
+          title: "SMS Management",
           url: "",
-          icon: Smartphone
+          icon: Smartphone,
         },
         {
-          title: 'Complaints',
+          title: "Complaints",
           url: "/complaint",
-          icon: MessageSquareWarning
+          icon: MessageSquareWarning,
         },
         {
           title: "Profile",
           url: "#",
-          icon: UserRoundPen
+          icon: UserRoundPen,
         },
-
-
       ],
     },
-
   ],
   customerNav: [
     {
@@ -80,42 +83,43 @@ const data = {
           title: "Billing",
           url: "/user/billing",
           icon: ReceiptText,
-
         },
         {
           title: "Water Usage",
           url: "/user/usage",
-          icon: Droplet
+          icon: Droplet,
         },
         {
           title: "Complaints",
           url: "/user/complaint",
-          icon: MessageSquareWarning
+          icon: MessageSquareWarning,
         },
-
         {
           title: "Profile",
           url: "#",
-          icon: UserRoundPen
+          icon: UserRoundPen,
         },
       ],
     },
   ],
-}
+};
+
 interface SidebarProps {
-
-  role: string
-
+  role: string;
 }
-export function AppSidebar({ role, ...props }: SidebarProps & React.ComponentProps<typeof Sidebar>) {
+
+export function AppSidebar({
+  role,
+  ...props
+}: SidebarProps & React.ComponentProps<typeof Sidebar>) {
   // Select the appropriate navigation data based on the role.
-  const navData = role === 'ADMIN' ? data.navMain : data.customerNav;
+  const navData = role === "ADMIN" ? data.navMain : data.customerNav;
 
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <h1 className="text-lg font-bold w-full text-center">
-          {role === 'admin' ? 'Admin Dashboard' : 'Customer Dashboard'}
+          {role === "ADMIN" ? "Admin Dashboard" : "Customer Dashboard"}
         </h1>
       </SidebarHeader>
       <SidebarContent>
@@ -139,6 +143,22 @@ export function AppSidebar({ role, ...props }: SidebarProps & React.ComponentPro
           </SidebarGroup>
         ))}
       </SidebarContent>
+      {/* Add a Logout button at the bottom */}
+      <div className="mt-auto p-4">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring focus:ring-red-300"
+            >
+              <Button onClick={async () => { await logoutActions() }}>
+                <LogOut className="h-5 w-5 mr-2" />
+                Logout
+              </Button>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </div>
       <SidebarRail />
     </Sidebar>
   );

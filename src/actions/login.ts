@@ -3,6 +3,8 @@ import { z } from "zod";
 import { compareSync } from "bcrypt-ts";
 import { db } from "@/db";
 import { createSession } from "@/lib/auth";
+import { deleteSession } from "@/lib/session";
+import { redirect } from "next/navigation";
 
 const loginSchema = z.object({
   username: z.string().min(3),
@@ -56,4 +58,9 @@ export async function loginActions(
   return {
     errors: {},
   };
+}
+
+export async function logoutActions() {
+  await deleteSession();
+  redirect("/");
 }

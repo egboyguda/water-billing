@@ -32,6 +32,8 @@ model Profile {
   phoneNumber String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  Complaint Complaint[]
 }
 
 model ApiKey {
@@ -88,6 +90,24 @@ model Payment {
   amount     Float      // Payment amount
   date       DateTime
   createdAt  DateTime   @default(now())
+}
+
+model Complaint {
+  id         String     @id @default(uuid())
+  profileId String
+  profile    Profile   @relation(fields: [profileId], references: [id])
+  name       String
+  description String
+  status     ComplaintStatus     // "Pending", "Resolved"
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+}
+
+
+enum ComplaintStatus {
+  PENDING
+  RESOLVED
 }
 
 enum UserRole {

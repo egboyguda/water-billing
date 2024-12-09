@@ -1,47 +1,67 @@
-
 import { AddCotumerModal } from "@/components/costomer/addCotumerModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getCustomer } from "@/db/queries/getCustomer";
 
-export default function Costumer() {
+export default async function Costumer() {
+    const customers = await getCustomer();  // Fixed typo 'customners' to 'customers'
+
     return (
         <div className="m-4 mt-20 space-y-4">
-
             <div className="flex justify-between">
                 <div className="flex w-full max-w-sm items-center space-x-2">
-                    <Input type="text" placeholder="Search a costumer" />
+                    <Input type="text" placeholder="Search a customer" />
                     <Button type="submit" variant='outline'>Search</Button>
                 </div>
 
                 <AddCotumerModal />
             </div>
-            <div className="min-h-[100vh] flex-1 rounded-xl  w-full   md:min-h-min mt-2 space-y-2" >
-                <h2 className="text-2xl  font-light">List of Costumer&apos;s</h2>
-                <Table className="bg-slate-50  rounded border-2">
+
+            <div className="min-h-[100vh] flex-1 rounded-xl w-full md:min-h-min mt-2 space-y-2">
+                <h2 className="text-2xl font-light">List of Customers</h2>
+
+                <Table className="bg-slate-50 rounded border-2">
                     <TableHeader>
                         <TableRow>
                             <TableHead className="w-[100px]">Name</TableHead>
                             <TableHead>Contact Number</TableHead>
                             <TableHead>Address</TableHead>
-                            <TableHead >Action</TableHead>
+                            <TableHead>Action</TableHead>
                         </TableRow>
                     </TableHeader>
+
                     <TableBody>
-                        <TableRow>
-                            <TableCell className="font-medium">Dummy Account</TableCell>
-                            <TableCell>0912323232</TableCell>
-                            <TableCell>123 Main Street, New York, NY 10010</TableCell>
-                            <TableCell className="space-x-2">
-                                <Button type="submit" className="bg-blue-600">Edit</Button>
-                                <Button type="submit" className="bg-red-700">Delete</Button>
-                            </TableCell>
-
-                        </TableRow>
+                        {customers && customers.length > 0 ? (
+                            customers.map((customer) => (
+                                <TableRow key={customer.id}>
+                                    {/* Check if profile exists */}
+                                    <TableCell className="font-medium">
+                                        {customer.profile ? customer.profile.name : "No Name"}
+                                    </TableCell>
+                                    <TableCell>
+                                        {customer.profile ? customer.profile.phoneNumber : "No Phone Number"}
+                                    </TableCell>
+                                    <TableCell>
+                                        {customer.profile ? customer.profile.address : "No Address"}
+                                    </TableCell>
+                                    <TableCell className="space-x-2">
+                                        <Button type="submit" className="bg-blue-600">Edit</Button>
+                                        <Button type="submit" className="bg-red-700">Delete</Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={4} className="text-center text-gray-500">
+                                    No customers found
+                                </TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
+
                 </Table>
-
-
             </div>
-        </div>)
+        </div>
+    );
 }
