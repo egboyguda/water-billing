@@ -1,7 +1,0 @@
-//make a post request to the api
-POST http://localhost:3000/api/{}
-Content-Type: application/json
-
-{
-  "totalMilliliters": 1000
-}
