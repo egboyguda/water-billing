@@ -1,8 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
 import {
     Card,
     CardContent,
@@ -14,72 +13,82 @@ import {
 import {
     ChartConfig,
     ChartContainer,
-    ChartTooltip,
+
     ChartTooltipContent,
 } from "@/components/ui/chart"
-const chartData = [
-    { browser: "january", visitors: 187, fill: "var(--color-january)" },
-    { browser: "february", visitors: 200, fill: "var(--color-february)" },
-    { browser: "march", visitors: 275, fill: "var(--color-march)" },
-    { browser: "april", visitors: 173, fill: "var(--color-april)" },
 
-]
+interface MonthlyUsage {
+    month: string;      // Name of the month (e.g., 'January', 'February', etc.)
+    waterUsage: number; // The water usage for that month
+}
 
-const chartConfig = {
-    visitors: {
-        label: "Usage",
-    },
-    january: {
-        label: "January",
-        color: "hsl(var(--chart-1))",
-    },
-    february: {
-        label: "February",
-        color: "hsl(var(--chart-2))",
-    },
-    march: {
-        label: "March",
-        color: "hsl(var(--chart-3))",
-    },
-    april: {
-        label: "April",
-        color: "hsl(var(--chart-4))",
-    },
+interface UsageChartProps {
+    monthlyUsage: MonthlyUsage[];
+}
 
-} satisfies ChartConfig
+export function UsageChart({ monthlyUsage }: UsageChartProps) {
+    // Handle case when monthlyUsage is null or undefined
+    if (!monthlyUsage || monthlyUsage.length === 0) {
+        return <div>No data available for the last five months.</div>;
+    }
 
-export function UsageChart() {
+    // Sort the data in descending order from the earliest month to the most recent
+    const sortedMonthlyUsage = monthlyUsage.sort((a, b) => {
+        const monthOrder = [
+            "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+        ];
+        return monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month);
+    });
+
+    // Prepare chart data and config based on the sorted data
+    const chartData = sortedMonthlyUsage.map((data) => ({
+        browser: data.month, // Use dynamic month names
+        visitors: data.waterUsage, // Use dynamic water usage
+        fill: `var(--color-${data.month.toLowerCase()})`, // Dynamic color for each month
+    }));
+
+    const chartConfig = sortedMonthlyUsage.reduce((acc, { month }, index) => {
+        acc[month.toLowerCase()] = {
+            label: month,
+            color: `hsl(var(--chart-${index + 1}))`,
+        };
+        return acc;
+    }, {
+        visitors: {
+            label: "Usage",
+        },
+    } as ChartConfig);
+
     return (
-        <Card >
+        <Card>
             <CardHeader>
                 <CardTitle>Water Usage Monthly</CardTitle>
                 <CardDescription>January - December 2024</CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>
-                    <BarChart accessibilityLayer data={chartData}>
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="browser"
-                            tickLine={false}
-                            tickMargin={10}
-                            axisLine={false}
-                            tickFormatter={(value) =>
-                                chartConfig[value as keyof typeof chartConfig]?.label
-                            }
-                        />
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Bar
-                            dataKey="visitors"
-                            strokeWidth={2}
-                            radius={8}
-
-
-                        />
-                    </BarChart>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={chartData} margin={{ bottom: 40, top: 20 }}>
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="browser"
+                                tickLine={false}
+                                tickMargin={10}
+                                axisLine={false}
+                                tickFormatter={(value: string) => value}
+                                angle={-45} // Rotate month labels to avoid overlap
+                                textAnchor="end" // Align text properly
+                            />
+                            <YAxis />
+                            <Tooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                            <Bar
+                                dataKey="visitors"
+                                fill="var(--color-primary)"
+                                strokeWidth={2}
+                                radius={8}
+                            />
+                        </BarChart>
+                    </ResponsiveContainer>
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col items-start gap-2 text-sm">
@@ -91,5 +100,5 @@ export function UsageChart() {
                 </div>
             </CardFooter>
         </Card>
-    )
+    );
 }

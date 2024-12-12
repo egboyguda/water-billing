@@ -1,10 +1,13 @@
 import { UsageChart } from "@/components/usage/chart";
+import { getWaterUsageForLastFiveMonths } from "@/db/queries/getWaterUsage";
 
-export default function Page() {
+export default async function Page() {
+    const monthlyUsage = await getWaterUsageForLastFiveMonths();
     return (<div className="m-4">
+
         <div className="flex flex-col md:flex-row ">
             <div className="md:w-1/3 w-full flex">
-                <UsageChart />
+                <UsageChart monthlyUsage={monthlyUsage || []} />
 
             </div>
             <div className="bg-slate-400 mt-4 md:mt-0 h-fit p-4 rounded-md w-fit">

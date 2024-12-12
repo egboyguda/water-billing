@@ -1,0 +1,7 @@
+//make a post request to the api
+POST http://localhost:3000/api/c0ce5bb1-89e4-43c0-90c9-16b37fccd98b
+Content-Type: application/json
+
+{
+  "totalMilliliters": 1000
+}

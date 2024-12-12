@@ -7,20 +7,27 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+enum BillStatus {
+  UNPAID
+  PAID
+  OVERDUE
+  PARTIALLY_PAID
+  VOIDED
+}
 
 model User {
   id          String     @id @default(uuid())
   email       String     @unique
   username    String     @unique
   password    String
-  role        UserRole   // Admin or Customer
-  profile     Profile?   // Optional, linked to a single profile
-  apiKey      ApiKey?    // Optional, specific to customers
-  meters      Meter[]    // A user can have multiple meters
-  bills       Bill[]     // A user can have multiple bills
-  payments    Payment[]  // A user can make multiple payments
+  role        UserRole
+  profile     Profile?
+  apiKey      ApiKey?
+  bills       Bill[]
+  payments    Payment[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  readingWater    ReadingWater[]
 }
 
 model Profile {
@@ -45,38 +52,26 @@ model ApiKey {
   updatedAt   DateTime  @updatedAt
 }
 
-model Meter {
-  id         String     @id @default(uuid())
-  serial     String     @unique
-  userId     String
-  user       User       @relation(fields: [userId], references: [id])
-  readings   Reading[]  // A meter will have multiple readings
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-}
 
-model Reading {
+model ReadingWater {
   id         String    @id @default(uuid())
-  meterId    String
-  meter      Meter     @relation(fields: [meterId], references: [id])
-  date       DateTime
-  wateUsage  Float     // Water consumption value (e.g., cubic meters)
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  waterUsage  Float     // Water consumption value (e.g., cubic meters)
   createdAt  DateTime  @default(now())
 }
 
 model Bill {
-  id         String     @id @default(uuid())
-  userId     String
-  user       User       @relation(fields: [userId], references: [id])
-  totalMonthlyUsage Float // Total monthly usage of the bill
-  //readingId  String     @unique
-  //reading    Reading    @relation(fields: [readingId], references: [id])
-  amount     Float      // Total amount of the bill
-  dueDate    DateTime
-  status     String     // "Paid", "Unpaid", "Overdue"
-  payments   Payment[]  // Payments made for this bill
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id          String      @id @default(uuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  amount      Float       // Total amount of the bill
+  dueDate     DateTime
+  billingMonth DateTime // Add this field
+  status      BillStatus  @default(UNPAID)
+  payments    Payment[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 

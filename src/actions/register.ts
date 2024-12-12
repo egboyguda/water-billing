@@ -10,15 +10,35 @@ const userSchema = z.object({
   email: z.string().email(),
   password: z
     .string()
-    .min(4)
-    .regex(/^[a-zA-Z0-9]{3,30}$/, {
-      message: "Password must be between 4 and 30 characters long",
+    .min(8, "Password must be at least 8 characters") // Increased minimum length
+    .max(100, "Password cannot exceed 100 characters") // Added max length
+    .refine((password) => /[a-z]/.test(password), {
+      message: "Password must contain at least one lowercase letter",
+    })
+    .refine((password) => /[A-Z]/.test(password), {
+      message: "Password must contain at least one uppercase letter",
+    })
+    .refine((password) => /[0-9]/.test(password), {
+      message: "Password must contain at least one number",
+    })
+    .refine((password) => /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/.test(password), {
+      message: "Password must contain at least one special character",
     }),
   password1: z
     .string()
-    .min(4)
-    .regex(/^[a-zA-Z0-9]{3,30}$/, {
-      message: "Password must be between 4 and 30 characters long",
+    .min(8, "Password must be at least 8 characters") // Increased minimum length
+    .max(100, "Password cannot exceed 100 characters") // Added max length
+    .refine((password) => /[a-z]/.test(password), {
+      message: "Password must contain at least one lowercase letter",
+    })
+    .refine((password) => /[A-Z]/.test(password), {
+      message: "Password must contain at least one uppercase letter",
+    })
+    .refine((password) => /[0-9]/.test(password), {
+      message: "Password must contain at least one number",
+    })
+    .refine((password) => /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/.test(password), {
+      message: "Password must contain at least one special character",
     }),
   //name show have regex
   // space allowed
