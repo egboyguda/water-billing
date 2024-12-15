@@ -1,7 +1,9 @@
+import { getPendingPaymentCount } from "@/db/queries/getBilling";
 import { getCurrentWaterUsage } from "@/db/queries/getWaterUsage";
 
 export default async function Page() {
     const water = await getCurrentWaterUsage();
+    const bill = await getPendingPaymentCount();
     const waterUsageInMilliliters = water?.totalWaterUsage ?? 0;
     const waterUsageInCubicMeters = (waterUsageInMilliliters / 1_000_000).toFixed(3);
 
@@ -18,7 +20,7 @@ export default async function Page() {
                 <div className="aspect-video rounded-xl bg-purple-600 flex flex-col justify-center items-center">
                     <div className="text-white text-center">
                         <h1 className="text-4xl font-bold">Pending Payments</h1>
-                        <p className="text-3xl font-medium">0</p>
+                        <p className="text-3xl font-medium">{bill.count}</p>
                     </div>
                 </div>
             </div>

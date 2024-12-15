@@ -16,9 +16,10 @@ interface BillWithUsageAndProfileName {
 
 interface BillTableProps {
   bills: BillWithUsageAndProfileName[] | null | undefined;
+  cost: number;
 }
 
-export default function BillTable({ bills }: BillTableProps) {
+export default function BillTable({ bills, cost }: BillTableProps) {
   if (!bills || bills.length === 0) {
     return <div>No bills found.</div>;
   }
@@ -42,7 +43,7 @@ export default function BillTable({ bills }: BillTableProps) {
           <TableRow key={bill.id}>
             <TableCell className="font-medium">{bill.profileName}</TableCell>
             <TableCell>{"Previous Usage is not implemented yet"}</TableCell>
-            <TableCell>{"Cost Per Cubic is not implemented yet"}</TableCell>
+            <TableCell>{cost}</TableCell>
             <TableCell>Php {bill.amount.toFixed(2)}</TableCell>
             <TableCell>{bill.dueDate.toLocaleDateString()}</TableCell>
             <TableCell>{bill.status}</TableCell>

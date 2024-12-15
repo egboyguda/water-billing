@@ -126,3 +126,50 @@ export const getAllBillsWithUsageAndProfileName = async () => {
     };
   }
 };
+
+//get pending payments
+export const getPendingPaymentCount = async () => {
+  try {
+    const session = await verifySession();
+
+    if (!session?.userId) {
+      return { success: false, message: "User not authenticated" };
+    }
+
+    const userId = session.userId;
+    const userRole = session.role;
+
+    let pendingCount = 0;
+
+    if (userRole === "CUSTOMER") {
+      pendingCount = await db.bill.count({
+        where: {
+          userId,
+          status: "UNPAID", // Or BillStatus.UNPAID if using an enum
+        },
+      });
+    } else {
+      pendingCount = await db.bill.count({
+        where: {
+          status: "UNPAID", // Or BillStatus.UNPAID if using an enum
+        },
+      });
+    }
+
+    return { success: true, count: pendingCount };
+  } catch (error) {
+    console.error("Error getting pending payment count:", error);
+    return { success: false, message: "Error getting pending payment count" };
+  }
+};
+
+//get cost
+export const getCostPerCubic = async () => {
+  try {
+    const cost = await db.cost.findFirst();
+    return cost;
+  } catch (error) {
+    console.error("Error getting cost per cubic:", error);
+    return null;
+  }
+};

@@ -47,6 +47,12 @@ const calculateBill = async (userId: string, billingDate: Date) => {
     const startOfBillingMonth = startOfMonth(billingDate);
     const endOfBillingMonth = endOfMonth(billingDate);
 
+    // Fetch cost per cubic meter
+    const costPerCubic = await db.cost.findFirst(); // Assuming a single record
+    if (!costPerCubic) {
+      throw new Error("Cost per cubic meter not found."); // Handle missing cost
+    }
+
     const totalMonthlyUsage = await db.readingWater.aggregate({
       where: {
         userId,
@@ -67,15 +73,7 @@ const calculateBill = async (userId: string, billingDate: Date) => {
       return null; // Return null if usage is zero
     }
 
-    let amount = 0;
-    const tier1Rate = 10;
-    const tier2Rate = 15;
-
-    if (usage <= 10) {
-      amount = usage * tier1Rate;
-    } else {
-      amount = 10 * tier1Rate + (usage - 10) * tier2Rate;
-    }
+    let amount = usage * costPerCubic.costperMeter; // Calculate amount using cost per cubic
 
     const issueDate = new Date();
     const dueDate = addDays(issueDate, 7);

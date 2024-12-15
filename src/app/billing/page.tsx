@@ -2,10 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import BillTable from "@/components/bill/billTable";
 import GenerateBillsButton from "@/components/bill/generateBillBtn";
-import { getAllBillsWithUsageAndProfileName } from "@/db/queries/getBilling";
+import { getAllBillsWithUsageAndProfileName, getCostPerCubic } from "@/db/queries/getBilling";
+import CostPerCubic from "@/components/bill/costperCubic";
 
 export default async function Page() {
     const billsData = await getAllBillsWithUsageAndProfileName(); // Rename to billsData
+    const cost = await getCostPerCubic();
 
     return (
         <div>
@@ -17,12 +19,15 @@ export default async function Page() {
                             Search
                         </Button>
                     </div>
-                    <GenerateBillsButton />
+                    <div className="flex space-x-2">
+                        <CostPerCubic />
+                        <GenerateBillsButton />
+                    </div>
                 </div>
                 <div className="min-h-[100vh] flex-1 rounded-xl w-full md:min-h-min mt-2 space-y-2">
                     <h2 className="text-2xl font-light">Billing</h2>
                     {billsData.success ? ( // Conditionally render the table
-                        <BillTable bills={billsData.bills} /> // Pass bills as prop
+                        <BillTable bills={billsData.bills} cost={cost?.costperMeter || 0} /> // Pass bills as prop
                     ) : (
                         <div>{billsData.message || "Error loading bills."}</div> // Display error message
                     )}

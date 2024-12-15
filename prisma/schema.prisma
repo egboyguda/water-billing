@@ -74,6 +74,10 @@ model Bill {
   updatedAt   DateTime    @updatedAt
 }
 
+model Cost{
+  id         String     @id @default(uuid())
+  costperMeter Float
+}
 
 
 model Payment {

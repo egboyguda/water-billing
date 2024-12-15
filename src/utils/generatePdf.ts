@@ -15,7 +15,10 @@ interface BillWithUsageAndProfileName {
   profileName: string;
 }
 
-export const generatePDF = (bill: BillWithUsageAndProfileName) => {
+export const generatePDF = (
+  bill: BillWithUsageAndProfileName,
+  cost: number
+) => {
   const doc = new jsPDF();
 
   doc.setFontSize(16);
@@ -30,7 +33,7 @@ export const generatePDF = (bill: BillWithUsageAndProfileName) => {
   const tableData = [
     ["Previous Usage", "Not implemented yet"],
     ["Current Reading", bill.totalUsage],
-    ["Cost Per Cubic", "Not implemented yet"],
+    ["Cost Per Cubic", cost],
     ["Total Bill", `Php ${bill.amount.toFixed(2)}`],
   ];
 

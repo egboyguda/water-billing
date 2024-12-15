@@ -20,9 +20,10 @@ interface BillWithUsageAndProfileName {
 }
 interface BillTableProps {
     bills: BillWithUsageAndProfileName[] | null | undefined;
+    cost: number
 }
 
-export default function BillTable({ bills }: BillTableProps) {
+export default function BillTable({ bills, cost }: BillTableProps) {
     if (!bills || bills.length === 0) {
         return <div>No bills found.</div>;
     }
@@ -46,16 +47,15 @@ export default function BillTable({ bills }: BillTableProps) {
                     <TableRow key={bill.id}>
                         <TableCell className="font-medium">{bill.profileName}</TableCell>
                         <TableCell>{"Previous Usage Logic Not Implemented"}</TableCell>
-                        <TableCell>{"Cost Per Cubic Logic Not Implemented"}</TableCell>
+                        <TableCell>{cost}</TableCell>
                         <TableCell>Php {bill.amount.toFixed(2)}</TableCell>
                         <TableCell>{bill.dueDate.toLocaleDateString()}</TableCell>
                         <TableCell>{bill.status}</TableCell>
                         <TableCell>{bill.totalUsage}</TableCell>
                         <TableCell>
                             <div className="flex gap-2">
-                                <Button variant="outline">Edit</Button>
-                                <Button variant="destructive">Delete</Button>
-                                <Button onClick={() => generatePDF(bill)}>Download Invoice</Button>
+
+                                <Button onClick={() => generatePDF(bill, cost)}>Download Invoice</Button>
                             </div>
                         </TableCell>
                     </TableRow>
