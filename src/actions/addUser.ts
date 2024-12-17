@@ -5,9 +5,13 @@ import { hashSync } from "bcrypt-ts";
 import { db } from "@/db";
 
 const userSchema = z.object({
-  //add a regex
-
-  email: z.string().email(),
+  username: z
+    .string()
+    .min(2)
+    .max(30)
+    .regex(/^[a-zA-Z ]*$/, {
+      message: "Username must be between 2 and 30 characters long",
+    }),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters") // Increased minimum length
@@ -23,68 +27,30 @@ const userSchema = z.object({
     .refine((password) => /[a-z]/.test(password), {
       message: "Password must contain at least one lowercase letter",
     }),
-  //name show have regex
-  // space allowed
-  //any character that accpeted tobe name
-  name: z
-    .string()
-    .min(2)
-    .max(30)
-    .regex(/^[a-zA-Z ]*$/, {
-      message: "Name must be between 2 and 30 characters long",
-    }),
-  //phone number
-  contact: z
-    .string()
-    .min(10)
-    .max(14)
-    .regex(/^[0-9]*$/, {
-      message: "Phone number must be between 10 and 10 characters long",
-    }),
-  //address
-  address: z
-    .string()
-    .min(4)
-    .max(50)
-    .regex(/^[a-zA-Z .]*$/, {
-      message: "Address can only contain letters, spaces, and periods.",
-    }),
-  username: z
-    .string()
-    .min(2)
-    .max(30)
-    .regex(/^[a-zA-Z ]*$/, {
-      message: "Username must be between 2 and 30 characters long",
-    }),
+  category: z.enum(["ADMIN", "MANAGER", "COLLECTOR"]),
 });
 
 interface UserState {
   errors: {
-    name?: string[];
-    email?: string[];
-    password?: string[];
-    contact?: string[];
-    address?: string[];
-    _form?: string[];
     username?: string[];
+    password?: string[];
+    password1?: string[];
+    category?: string[];
+    _form?: string[];
   };
 }
-export async function registerAction(
+export async function addUserAction(
   formState: UserState,
   formData: FormData
 ): Promise<UserState> {
   const result = userSchema.safeParse({
-    email: formData.get("email"),
-    password: formData.get("password"),
-    name: formData.get("name"),
-    contact: formData.get("contact"),
-    address: formData.get("address"),
     username: formData.get("username"),
+    password: formData.get("password"),
     password1: formData.get("password1"),
+    category: formData.get("category"),
   });
-
+  console.log(formData.get("category"));
   if (!result.success) {
-    console.log(result.error.flatten().fieldErrors);
     return {
       errors: result.error.flatten().fieldErrors,
     };
@@ -96,27 +62,15 @@ export async function registerAction(
       },
     };
   }
-
   try {
     const user = await db.user.create({
       data: {
-        email: result.data.email,
-        password: hashSync(result.data.password),
-        role: "CUSTOMER",
         username: result.data.username,
-      },
-      select: {
-        id: true,
-      },
-    });
-    await db.profile.create({
-      data: {
-        userId: user.id,
-        name: result.data.name,
-        address: result.data.address,
-        phoneNumber: result.data.contact,
+        password: hashSync(result.data.password),
+        role: result.data.category,
       },
     });
+    console.log(user);
   } catch (error) {
     if (error instanceof Error) {
       return { errors: { _form: [error.message] } };

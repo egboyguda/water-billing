@@ -17,7 +17,7 @@ enum BillStatus {
 
 model User {
   id          String     @id @default(uuid())
-  email       String     @unique
+  email       String?     @unique
   username    String     @unique
   password    String
   role        UserRole
@@ -112,4 +112,6 @@ enum ComplaintStatus {
 enum UserRole {
   ADMIN
   CUSTOMER
+  COLLECTOR
+  MANAGER
 }

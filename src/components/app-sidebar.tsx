@@ -21,6 +21,7 @@ import {
   User,
   UserRoundPen,
   LogOut,
+  UserPlus,
 } from "lucide-react";
 import Link from "next/link";
 import { logoutActions } from "@/actions/login";
@@ -63,10 +64,16 @@ const data = {
           icon: MessageSquareWarning,
         },
         {
+          title: "Add User",
+          url: "/add", // Define the URL for user creation
+          icon: UserPlus, // Import UserPlus icon from "lucide-react"
+        },
+        {
           title: "Profile",
           url: "#",
           icon: UserRoundPen,
         },
+
       ],
     },
   ],
