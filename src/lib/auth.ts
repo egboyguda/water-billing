@@ -45,8 +45,4 @@ export async function createSession(userId: string, role: string) {
     sameSite: "lax",
     path: "/",
   });
-  if (role === "admin") {
-    redirect("/");
-  }
-  redirect("/user");
 }

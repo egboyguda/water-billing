@@ -27,6 +27,7 @@ import Link from "next/link";
 import { logoutActions } from "@/actions/login";
 import { Button } from "./ui/button";
 
+
 // This is sample data.
 const data = {
   navMain: [
@@ -109,6 +110,23 @@ const data = {
       ],
     },
   ],
+  collectorNav: [
+    {
+      items: [
+        {
+          title: 'Home',
+          url: '/collector',
+          icon: HomeIcon,
+
+        }
+        , {
+          title: "Billing",
+          url: "/collector/billing",
+          icon: ReceiptText,
+        },
+      ]
+    }
+  ]
 };
 
 interface SidebarProps {
@@ -120,7 +138,9 @@ export function AppSidebar({
   ...props
 }: SidebarProps & React.ComponentProps<typeof Sidebar>) {
   // Select the appropriate navigation data based on the role.
-  const navData = role === "ADMIN" ? data.navMain : data.customerNav;
+  const navData = role === "ADMIN" ? data.navMain : role === "COLLECTOR" ? data.collectorNav : data.customerNav;
+
+
 
   return (
     <Sidebar {...props}>
@@ -137,7 +157,7 @@ export function AppSidebar({
               <SidebarMenu>
                 {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
+                    <SidebarMenuButton asChild >
                       <Link href={item.url}>
                         {item.icon && <item.icon className="h-5 w-5" />}
                         {item.title}

@@ -7,6 +7,7 @@ const routes = {
   admin: ["/", "/usage", "/billing", "/complaint", "/customer"],
   customer: ["/user", "/user/billing", "/user/usage", "/user/complaint"],
   public: ["/login"],
+  collector: ["/collector"],
 };
 
 export default async function middleware(req: NextRequest) {
@@ -27,8 +28,14 @@ export default async function middleware(req: NextRequest) {
 
   // Redirect authenticated users on public routes to their dashboard
   if (isPublicRoute && session?.userId) {
-    const dashboardRoute = session?.role === "ADMIN" ? "/" : "/user";
-    return NextResponse.redirect(new URL(dashboardRoute, req.nextUrl));
+    //const dashboardRoute = session?.role === "ADMIN" ? "/" : "/user";
+    if (session?.role === "ADMIN") {
+      return NextResponse.redirect(new URL("/", req.nextUrl));
+    } else if (session?.role === "COLLECTOR") {
+      return NextResponse.redirect(new URL("/collector", req.nextUrl));
+    }
+
+    return NextResponse.redirect(new URL("/user", req.nextUrl));
   }
 
   // Allow access to customer-specific routes only for customers
@@ -36,7 +43,10 @@ export default async function middleware(req: NextRequest) {
   if (isCustomerRoute && session?.role !== "CUSTOMER") {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
-
+  const isCollectorRouter = routes.collector.includes(path);
+  if (isCollectorRouter && session?.role !== "COLLECTOR") {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
+  }
   // Continue processing the request
   return NextResponse.next();
 }

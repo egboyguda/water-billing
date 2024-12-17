@@ -55,6 +55,15 @@ export async function loginActions(
   console.log(compareSync(result.data.password, user.password));
   const userId = user.id.toString();
   await createSession(userId, user.role.toString());
+  if (user.role === "ADMIN") {
+    redirect("/");
+  } else if (user.role === "MANAGER") {
+    redirect("/manager");
+  } else if (user.role === "COLLECTOR") {
+    redirect("/collector");
+  } else {
+    redirect("/user");
+  }
   return {
     errors: {},
   };
