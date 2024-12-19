@@ -1,4 +1,7 @@
+import { deleteUserAction } from "@/actions/editUser";
 import { AddCotumerModal } from "@/components/costomer/addCotumerModal";
+import DeleteBtn from "@/components/costomer/deletebtn";
+import EditDialog from "@/components/costomer/editDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -46,8 +49,8 @@ export default async function Costumer() {
                                         {customer.profile ? customer.profile.address : "No Address"}
                                     </TableCell>
                                     <TableCell className="space-x-2">
-                                        <Button type="submit" className="bg-blue-600">Edit</Button>
-                                        <Button type="submit" className="bg-red-700">Delete</Button>
+                                        <EditDialog name={customer.profile?.name || ""} username={customer.username || ""} email={customer?.email || ""} contactNum={customer.profile?.phoneNumber || ""} address={customer.profile?.address || ""} apikey={customer.apiKey?.key || ""} userId={customer.id} />
+                                        <DeleteBtn userId={customer.id} />
                                     </TableCell>
                                 </TableRow>
                             ))

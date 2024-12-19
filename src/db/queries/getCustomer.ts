@@ -24,6 +24,10 @@ export const getCustomer = async () => {
       },
       select: {
         id: true,
+        username: true,
+        email: true,
+        apiKey: { select: { key: true } },
+
         profile: { select: { name: true, address: true, phoneNumber: true } },
       },
     });

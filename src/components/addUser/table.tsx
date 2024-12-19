@@ -1,6 +1,7 @@
 import { getUserAdminManagerCollector } from "@/db/queries/getUser";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Button } from "@/components/ui/button"; // Import your Button component
+import { DialogUser } from "./dialogUser";
 
 export default async function Usertable() {
     const usersResult = await getUserAdminManagerCollector();
@@ -33,7 +34,7 @@ export default async function Usertable() {
                             <TableCell>{user.role}</TableCell>
                             <TableCell>
                                 <div className="flex gap-2">
-                                    <Button variant="outline">Edit</Button> {/* Use Button component */}
+                                    <DialogUser userId={user.id} username={user.username} /> {/* Use Button component */}
                                     <Button variant="destructive">Delete</Button> {/* Use Button component */}
                                 </div>
                             </TableCell>

@@ -21,7 +21,7 @@ model User {
   username    String     @unique
   password    String
   role        UserRole
-  profile     Profile?
+  profile     Profile?   
   apiKey      ApiKey?
   bills       Bill[]
   payments    Payment[]
@@ -33,14 +33,14 @@ model User {
 model Profile {
   id          String    @id @default(uuid())
   userId      String    @unique
-  user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id],onDelete: Cascade)
   name        String
   address     String
   phoneNumber String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  Complaint Complaint[]
+  Complaint Complaint[] 
 }
 
 model ApiKey {
