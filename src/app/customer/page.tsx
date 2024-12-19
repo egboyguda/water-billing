@@ -1,4 +1,5 @@
 import { deleteUserAction } from "@/actions/editUser";
+import Search from "@/components/common/search";
 import { AddCotumerModal } from "@/components/costomer/addCotumerModal";
 import DeleteBtn from "@/components/costomer/deletebtn";
 import EditDialog from "@/components/costomer/editDialog";
@@ -13,11 +14,7 @@ export default async function Costumer() {
     return (
         <div className="m-4 mt-20 space-y-4">
             <div className="flex justify-between">
-                <div className="flex w-full max-w-sm items-center space-x-2">
-                    <Input type="text" placeholder="Search a customer" />
-                    <Button type="submit" variant='outline'>Search</Button>
-                </div>
-
+                <Search />
                 <AddCotumerModal />
             </div>
 
