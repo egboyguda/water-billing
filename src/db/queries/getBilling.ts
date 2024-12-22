@@ -1,7 +1,8 @@
 import { db } from "@/db";
 import { verifySession } from "@/lib/dal";
+import { Prisma } from "@prisma/client";
 import { startOfMonth, endOfMonth } from "date-fns";
-
+import { BillStatus } from "@prisma/client";
 interface BillWithUsageAndProfileName {
   // Correct Interface
   id: string;
@@ -22,6 +23,82 @@ interface BillingResult {
   bills?: BillWithUsageAndProfileName[]; // Correct type here
 }
 
+export const filterBillsActions = async (status: BillStatus, term: string) => {
+  const session = await verifySession();
+  if (!session?.userId) {
+    return { success: false, message: "User not authenticated" };
+  }
+
+  try {
+    const bills = await db.bill.findMany({
+      where: {
+        AND: [
+          {
+            OR: [
+              {
+                user: {
+                  username: { contains: term, mode: "insensitive" },
+                },
+              },
+              {
+                user: {
+                  profile: {
+                    name: { contains: term, mode: "insensitive" },
+                  },
+                },
+              },
+            ],
+          },
+          ...(status && status in BillStatus ? [{ status }] : []), // Conditionally add status filter
+        ],
+      },
+      include: {
+        user: {
+          include: {
+            profile: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const billsWithUsageAndProfileName = await Promise.all(
+      bills.map(async (bill) => {
+        const start = startOfMonth(bill.billingMonth);
+        const end = endOfMonth(bill.billingMonth);
+
+        const aggregateResult = await db.readingWater.aggregate({
+          where: {
+            userId: bill.userId,
+            createdAt: {
+              gte: start,
+              lte: end,
+            },
+          },
+          _sum: {
+            waterUsage: true,
+          },
+        });
+
+        const totalUsage = aggregateResult._sum?.waterUsage || 0;
+
+        return {
+          ...bill,
+          totalUsage,
+          profileName: bill.user.profile?.name || "No Profile",
+        };
+      })
+    );
+
+    return { success: true, bills: billsWithUsageAndProfileName };
+  } catch (error) {
+    console.error("Error filtering bills:", error);
+    return { success: false, message: "Error filtering bills" };
+  }
+};
 export const getBillingUser = async (): Promise<BillingResult> => {
   try {
     const session = await verifySession();

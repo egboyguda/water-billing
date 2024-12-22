@@ -11,3 +11,12 @@ export async function search(formData: FormData) {
   }
   redirect(`/search?term=${term}`);
 }
+
+export async function filterBills(formData: FormData) {
+  const status = formData.get("status");
+  const term = formData.get("term");
+  if (typeof status !== "string" || typeof term !== "string") {
+    redirect("/");
+  }
+  redirect(`/billing/search?status=${status}&term=${term}`);
+}
