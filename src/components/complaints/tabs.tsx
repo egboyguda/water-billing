@@ -42,7 +42,8 @@ export default async function ComplaintsTabs() {
                                         <TableCell><span className="bg-yellow-500 p-2 text-white rounded-sm">{complaint.status}</span></TableCell>
                                         <TableCell>
                                             <div className="flex gap-2">
-                                                <ChangeStatusDialogComplaint Id={complaint.id} />
+                                                {session?.role === 'ADMIN' || session?.role === "MANAGER" ? <ChangeStatusDialogComplaint Id={complaint.id} /> : null}
+
                                                 <button className="btn bg-white p-2 rounded border">Delete</button>
                                             </div>
                                         </TableCell>
@@ -61,6 +62,7 @@ export default async function ComplaintsTabs() {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Description</TableHead>
+                                    <TableHead>Remarks</TableHead>
                                     <TableHead>Status</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -69,6 +71,7 @@ export default async function ComplaintsTabs() {
                                     <TableRow key={complaint.id}>
                                         <TableCell>{complaint.name}</TableCell>
                                         <TableCell>{complaint.description}</TableCell>
+                                        <TableCell>{complaint.remarks}</TableCell>
                                         <TableCell>{complaint.status}</TableCell>
                                     </TableRow>
                                 ))}

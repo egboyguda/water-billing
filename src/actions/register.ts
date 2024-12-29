@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { hashSync } from "bcrypt-ts";
 import { db } from "@/db";
+import { revalidatePath } from "next/cache";
 
 const userSchema = z.object({
   //add a regex
@@ -117,6 +118,12 @@ export async function registerAction(
         phoneNumber: result.data.contact,
       },
     });
+    await db.apiKey.create({
+      data: {
+        userId: user.id,
+      },
+    });
+    revalidatePath("/customer");
   } catch (error) {
     if (error instanceof Error) {
       return { errors: { _form: [error.message] } };

@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { hashSync } from "bcrypt-ts";
 import { db } from "@/db";
+import { revalidatePath } from "next/cache";
 
 const userSchema = z.object({
   username: z
@@ -70,7 +71,8 @@ export async function addUserAction(
         role: result.data.category,
       },
     });
-    console.log(user);
+
+    revalidatePath("/customer");
   } catch (error) {
     if (error instanceof Error) {
       return { errors: { _form: [error.message] } };

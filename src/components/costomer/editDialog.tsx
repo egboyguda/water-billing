@@ -27,6 +27,16 @@ interface EditDialogProps {
 
 export default function EditDialog({ name, username, email, contactNum, address, userId, apikey }: EditDialogProps) {
     const [formState, action, isPending] = useActionState(editUserAction.bind(null, userId), { errors: {} })
+    const handleCopyApiKey = () => {
+        navigator.clipboard.writeText(apikey)
+            .then(() => {
+                console.log("API Key copied to clipboard!"); // Optional success message
+            })
+            .catch((err) => {
+                console.error("Failed to copy API Key:", err); // Optional error handling
+            });
+    };
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -97,6 +107,7 @@ export default function EditDialog({ name, username, email, contactNum, address,
                                 defaultValue={apikey}
                                 className="col-span-3"
                             />
+                            <Button onClick={handleCopyApiKey} variant="outline" type="button">Copy API Key</Button>
                         </div>
                     </div>
                     {formState.errors._form && <p className="text-red-500 text-sm ">{formState.errors._form}</p>}

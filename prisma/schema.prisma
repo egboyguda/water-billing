@@ -101,6 +101,7 @@ model Complaint {
   status     ComplaintStatus     // "Pending", "Resolved"
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+  remarks    String?
 
 }
 

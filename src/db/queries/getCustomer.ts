@@ -96,3 +96,21 @@ export const getCustomer = async () => {
     return null; // Return null in case of an error
   }
 };
+
+export const getUniqueCustomers = async () => {
+  const session = await verifySession();
+  if (!session) return null;
+  const customer = await db.user.findUnique({
+    where: {
+      id: session.userId,
+    },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      apiKey: { select: { key: true } },
+      profile: { select: { name: true, address: true, phoneNumber: true } },
+    },
+  });
+  return customer;
+};
