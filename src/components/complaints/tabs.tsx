@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getComplaint } from "@/db/queries/getComplaint";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { verifySession } from "@/lib/dal";
+import ChangeStatusDialogComplaint from "./dialog";
 
 export default async function ComplaintsTabs() {
     const complaints = await getComplaint();
@@ -12,7 +13,7 @@ export default async function ComplaintsTabs() {
 
     return (
         <div className="m-4">
-            <Tabs defaultValue="pending" className="w-[400px]">
+            <Tabs defaultValue="pending" className="w-full">
                 <TabsList>
                     <TabsTrigger value="pending">Pending Complaints</TabsTrigger>
                     <TabsTrigger value="completed">Completed Complaints</TabsTrigger>
@@ -26,6 +27,7 @@ export default async function ComplaintsTabs() {
                                     <TableHead>Issue</TableHead>
                                     <TableHead>Description</TableHead>
                                     <TableHead>Status</TableHead>
+                                    <TableHead>Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -38,6 +40,12 @@ export default async function ComplaintsTabs() {
                                         <TableCell>{complaint.name}</TableCell>
                                         <TableCell>{complaint.description}</TableCell>
                                         <TableCell><span className="bg-yellow-500 p-2 text-white rounded-sm">{complaint.status}</span></TableCell>
+                                        <TableCell>
+                                            <div className="flex gap-2">
+                                                <ChangeStatusDialogComplaint Id={complaint.id} />
+                                                <button className="btn bg-white p-2 rounded border">Delete</button>
+                                            </div>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

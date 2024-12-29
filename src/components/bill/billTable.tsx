@@ -1,5 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Button } from "@/components/ui/button";
+import ChangeStatusDialog from "./dialog";
 
 interface BillWithUsageAndProfileName {
   id: string;
@@ -50,8 +51,8 @@ export default function BillTable({ bills, cost }: BillTableProps) {
             <TableCell>{bill.totalUsage}</TableCell>
             <TableCell>
               <div className="flex gap-2">
-                <Button variant="outline">Edit</Button>
-                <Button variant="destructive">Delete</Button>
+                <ChangeStatusDialog billId={bill.id} />
+
               </div>
             </TableCell>
           </TableRow>
