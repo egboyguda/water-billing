@@ -6,7 +6,7 @@ export const getComplaint = async () => {
     const session = await verifySession();
     if (!session) return null;
 
-    if (session.role === "ADMIN") {
+    if (session.role === "ADMIN" || session.role === "MANAGER") {
       // Return all complaints for admin
       return await db.complaint.findMany({
         include: { profile: { select: { name: true } } },

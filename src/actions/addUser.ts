@@ -64,7 +64,7 @@ export async function addUserAction(
     };
   }
   try {
-    const user = await db.user.create({
+    await db.user.create({
       data: {
         username: result.data.username,
         password: hashSync(result.data.password),

@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { useActionState } from "react"
-import { addUserAction } from "@/actions/addUser"
 import { editAdminUserAction } from "@/actions/editAdminUser"
 
 interface AddUserProps {
@@ -32,7 +31,7 @@ export function DialogUser({ userId, username }: AddUserProps) {
                 <DialogHeader>
                     <DialogTitle>Add User</DialogTitle>
                     <DialogDescription>
-                        Edit Users. Click save when you're done.
+                        Edit Users. Click save when you&apos;re done.
                     </DialogDescription>
                 </DialogHeader>
                 <form action={action}>

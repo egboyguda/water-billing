@@ -1,5 +1,4 @@
-import Image from 'next/image'
-import { Button } from "@/components/ui/button"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import EditProfileForm from './formProfile'
 interface Profile {
@@ -15,15 +14,7 @@ interface Profile {
 export default function ProfilePage({ username, email, contactNum, address, userId, apikey, name }: Profile) {
     // In a real application, you would fetch this data from an API or database
 
-    const user = {
-        name: "Jane Doe",
-        email: "jane.doe@example.com",
-        bio: "Software engineer passionate about creating amazing user experiences.",
-        avatar: "/placeholder.svg?height=128&width=128",
-        location: "San Francisco, CA",
-        website: "https://janedoe.com",
-        joinDate: "January 2022"
-    }
+
 
     return (
         <div className="container mx-auto p-4">
@@ -57,7 +48,7 @@ export default function ProfilePage({ username, email, contactNum, address, user
                             <p>{apikey}</p>
 
                         </div>
-                        <EditProfileForm name={name} username={username} email={email} contactNum={contactNum} address={address} userId={userId} apikey={apikey} />
+                        <EditProfileForm name={name} username={username} email={email} contactNum={contactNum} address={address} userId={userId} />
                     </div>
                 </CardContent>
             </Card>

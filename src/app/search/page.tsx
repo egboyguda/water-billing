@@ -2,6 +2,7 @@ import Search from "@/components/common/search"
 import { AddCotumerModal } from "@/components/costomer/addCotumerModal"
 import CusTable from "@/components/costomer/cusTable"
 import { searchCustomer } from "@/db/queries/getCustomer"
+
 import { redirect } from "next/navigation"
 
 export default async function Page(props: { searchParams: Promise<{ term: string, category: string }> }) {

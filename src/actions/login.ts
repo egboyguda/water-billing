@@ -58,7 +58,7 @@ export async function loginActions(
   if (user.role === "ADMIN") {
     redirect("/");
   } else if (user.role === "MANAGER") {
-    redirect("/manager");
+    redirect("/");
   } else if (user.role === "COLLECTOR") {
     redirect("/collector");
   } else {

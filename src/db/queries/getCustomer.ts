@@ -1,5 +1,5 @@
 import { verifySession } from "@/lib/dal";
-import type { ApiKey, Profile, User } from "@prisma/client";
+
 import { db } from "..";
 
 // Define the precise return type

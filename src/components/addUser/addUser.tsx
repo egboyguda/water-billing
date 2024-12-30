@@ -26,7 +26,7 @@ export function DialogUser() {
                 <DialogHeader>
                     <DialogTitle>Add User</DialogTitle>
                     <DialogDescription>
-                        Add Admin, Manager and Collector Account. Click save when you're done.
+                        Add Admin, Manager and Collector Account. Click save when you&apos;re done.
                     </DialogDescription>
                 </DialogHeader>
                 <form action={action}>

@@ -1,10 +1,9 @@
-import { deleteUserAction } from "@/actions/editUser";
+
 import Search from "@/components/common/search";
 import { AddCotumerModal } from "@/components/costomer/addCotumerModal";
 import DeleteBtn from "@/components/costomer/deletebtn";
 import EditDialog from "@/components/costomer/editDialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getCustomer } from "@/db/queries/getCustomer";
 

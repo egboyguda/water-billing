@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { filterBillsActions, getCostPerCubic } from "@/db/queries/getBilling"
+import { getUser } from "@/db/queries/getUser"
 import { BillStatus } from "@prisma/client"
 
 import { redirect } from "next/navigation"
@@ -15,6 +16,7 @@ export default async function Page(props: { searchParams: Promise<{ term: string
     const searchParams = await props.searchParams
     const term = searchParams.term
     const status = searchParams.status
+    const user = await getUser()
     if (!term && !status) {
         redirect("/billing")
     }
@@ -48,10 +50,10 @@ export default async function Page(props: { searchParams: Promise<{ term: string
                     </form>
 
 
-                    <div className="flex space-x-2">
+                    {user?.role === "ADMIN" ? <div className="flex space-x-2">
                         <CostPerCubic />
                         <GenerateBillsButton />
-                    </div>
+                    </div> : null}
                 </div>
                 <div className="min-h-[100vh] flex-1 rounded-xl w-full md:min-h-min mt-2 space-y-2">
                     <h2 className="text-2xl font-light">Billing</h2>

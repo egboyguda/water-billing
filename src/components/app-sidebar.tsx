@@ -56,7 +56,7 @@ const data = {
         },
         {
           title: "SMS Management",
-          url: "",
+          url: "/sms",
           icon: Smartphone,
         },
         {
@@ -126,6 +126,37 @@ const data = {
         },
       ]
     }
+  ],
+  managerNav: [
+    {
+      items: [
+        {
+          title: "Home",
+          url: "/",
+          icon: HomeIcon,
+          isActive: true,
+        },
+        {
+          title: "SMS Management",
+          url: "/sms",
+          icon: Smartphone,
+        },
+        {
+          title: "Customer List",
+          url: "/customer",
+          icon: User,
+        },
+        {
+          title: "Water Usage",
+          url: "/usage",
+          icon: Droplet,
+        }, {
+          title: "Complaints",
+          url: "/complaint",
+          icon: MessageSquareWarning,
+        },
+      ]
+    }
   ]
 };
 
@@ -138,8 +169,14 @@ export function AppSidebar({
   ...props
 }: SidebarProps & React.ComponentProps<typeof Sidebar>) {
   // Select the appropriate navigation data based on the role.
-  const navData = role === "ADMIN" ? data.navMain : role === "COLLECTOR" ? data.collectorNav : data.customerNav;
-
+  const navData =
+    role === "ADMIN"
+      ? data.navMain
+      : role === "MANAGER"
+        ? data.managerNav
+        : role === "COLLECTOR"
+          ? data.collectorNav
+          : data.customerNav;
 
 
   return (

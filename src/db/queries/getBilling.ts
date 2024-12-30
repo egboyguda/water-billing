@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { verifySession } from "@/lib/dal";
-import { Prisma } from "@prisma/client";
+
 import { startOfMonth, endOfMonth } from "date-fns";
 import { BillStatus } from "@prisma/client";
 interface BillWithUsageAndProfileName {

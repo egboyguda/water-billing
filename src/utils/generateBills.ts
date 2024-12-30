@@ -73,7 +73,7 @@ const calculateBill = async (userId: string, billingDate: Date) => {
       return null; // Return null if usage is zero
     }
 
-    let amount = usage * costPerCubic.costperMeter; // Calculate amount using cost per cubic
+    const amount = usage * costPerCubic.costperMeter; // Calculate amount using cost per cubic
 
     const issueDate = new Date();
     const dueDate = addDays(issueDate, 7);
