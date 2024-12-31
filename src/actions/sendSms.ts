@@ -5,6 +5,7 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const number = process.env.TWILIO_NUM;
 
 const client = twilio(accountSid, authToken);
+console.log(client);
 
 export async function sendSms(
   recipient: string,
@@ -18,7 +19,9 @@ export async function sendSms(
       );
       return "Invalid recipient number format. Must be +639xxxxxxxxx"; // Indicate the error
     }
-
+    console.log(accountSid);
+    console.log(authToken);
+    console.log(number);
     const twilioMessage = await client.messages.create({
       body: message,
       from: number,
