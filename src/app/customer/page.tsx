@@ -6,15 +6,17 @@ import EditDialog from "@/components/costomer/editDialog";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getCustomer } from "@/db/queries/getCustomer";
+import { verifySession } from "@/lib/dal";
 
 export default async function Costumer() {
     const customers = await getCustomer();  // Fixed typo 'customners' to 'customers'
-
+    const session = await verifySession();
     return (
         <div className="m-4 mt-20 space-y-4">
             <div className="flex justify-between">
                 <Search />
-                <AddCotumerModal />
+                {session?.role === "ADMIN" ? <AddCotumerModal /> : null}
+
             </div>
 
             <div className="min-h-[100vh] flex-1 rounded-xl w-full md:min-h-min mt-2 space-y-2">
@@ -44,10 +46,10 @@ export default async function Costumer() {
                                     <TableCell>
                                         {customer.profile ? customer.profile.address : "No Address"}
                                     </TableCell>
-                                    <TableCell className="space-x-2">
+                                    {session?.role === 'ADMIN' ? <TableCell className="space-x-2">
                                         <EditDialog name={customer.profile?.name || ""} username={customer.username || ""} email={customer?.email || ""} contactNum={customer.profile?.phoneNumber || ""} address={customer.profile?.address || ""} apikey={customer.apiKey?.key || ""} userId={customer.id} />
                                         <DeleteBtn userId={customer.id} />
-                                    </TableCell>
+                                    </TableCell> : null}
                                 </TableRow>
                             ))
                         ) : (

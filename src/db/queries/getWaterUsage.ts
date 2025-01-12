@@ -3,6 +3,16 @@ import { db } from "..";
 
 // Define the type for the result of the raw query
 
+export const getTotalWaterUsage = async () => {
+  const session = await verifySession();
+  if (!session) return null;
+  const totalWaterUsage = await db.readingWater.aggregate({
+    _sum: {
+      waterUsage: true,
+    },
+  });
+  return totalWaterUsage._sum.waterUsage || 0;
+};
 export const getCurrentWaterUsage = async () => {
   const session = await verifySession();
 

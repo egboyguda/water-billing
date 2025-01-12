@@ -132,15 +132,11 @@ const data = {
       items: [
         {
           title: "Home",
-          url: "/",
+          url: "/manager",
           icon: HomeIcon,
           isActive: true,
         },
-        {
-          title: "SMS Management",
-          url: "/sms",
-          icon: Smartphone,
-        },
+
         {
           title: "Customer List",
           url: "/customer",

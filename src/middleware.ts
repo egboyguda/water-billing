@@ -4,11 +4,12 @@ import { cookies } from "next/headers";
 
 // Define route categories
 const routes = {
-  admin: ["/add"],
+  admin: ["/add", "/"],
+  manager: ["/manager"],
   customer: ["/user", "/user/billing", "/user/usage", "/user/complaint"],
   public: ["/login"],
   collector: ["/collector", "/collector/billing"],
-  manAdmin: ["/", "/usage/", "/complaint", "/customer", "/sms"],
+  manAdmin: ["/usage/", "/complaint", "/customer", "/sms"],
   adminCollector: ["/billing"],
   shareAll: ["/profile"],
 };
@@ -20,6 +21,7 @@ export default async function middleware(req: NextRequest) {
   const isAdminRoute = routes.admin.includes(path);
   const isPublicRoute = routes.public.includes(path);
   const isManAD = routes.manAdmin.includes(path);
+  const isManagerRoute = routes.manager.includes(path);
 
   // Get and decrypt the session cookie
   const cookie = (await cookies()).get("session")?.value;
@@ -27,6 +29,9 @@ export default async function middleware(req: NextRequest) {
 
   // Redirect unauthenticated users on protected routes to /login
   if (isAdminRoute && session?.role !== "ADMIN") {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
+  }
+  if (isManagerRoute && session?.role !== "MANAGER") {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
   if (isManAD && session?.role !== "ADMIN" && session?.role !== "MANAGER") {

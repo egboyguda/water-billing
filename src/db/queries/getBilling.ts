@@ -250,3 +250,112 @@ export const getCostPerCubic = async () => {
     return null;
   }
 };
+export const getTotalBillAmount = async () => {
+  // Verify the session
+  const session = await verifySession();
+  if (!session) return null;
+
+  // Get the user's ID from the session
+
+  // Query the total bill amount for the authenticated user
+  const totalBillAmount = await db.bill.aggregate({
+    _sum: {
+      amount: true,
+    },
+  });
+
+  // Return the total amount (or 0 if no bills are found)
+  return totalBillAmount._sum.amount || 0;
+};
+
+export const getBillingSummaryForCurrentMonth = async () => {
+  // Get the current date and calculate the start and end of the month
+  const startOfMonth = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    1
+  );
+  const endOfMonth = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth() + 1,
+    0
+  );
+
+  // Query total billing and total PAID billing for the current month
+  const totalBilling = await db.bill.aggregate({
+    _sum: {
+      amount: true,
+    },
+    where: {
+      billingMonth: {
+        gte: startOfMonth,
+        lte: endOfMonth,
+      },
+    },
+  });
+
+  const totalPaidBilling = await db.bill.aggregate({
+    _sum: {
+      amount: true,
+    },
+    where: {
+      billingMonth: {
+        gte: startOfMonth,
+        lte: endOfMonth,
+      },
+      status: "PAID",
+    },
+  });
+
+  // Return both results in a single object
+  return {
+    totalBilling: totalBilling._sum.amount || 0,
+    totalPaidBilling: totalPaidBilling._sum.amount || 0,
+  };
+};
+
+export const getMonthlyBillingForCurrentYear = async () => {
+  const currentYear = new Date().getFullYear();
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  // Query the database for billing grouped by month
+  const monthlyBilling = await db.bill.groupBy({
+    by: ["billingMonth"], // Group by the `billingMonth` field
+    _sum: {
+      amount: true, // Sum up the `amount` field
+    },
+    where: {
+      billingMonth: {
+        gte: new Date(`${currentYear}-01-01`), // Start of the year
+        lte: new Date(`${currentYear}-12-31`), // End of the year
+      },
+    },
+  });
+
+  // Initialize an array with all months and set billing to 0 by default
+  const result = months.map((month) => ({
+    month,
+    billing: 0,
+  }));
+
+  // Populate the result array with actual billing data
+  monthlyBilling.forEach(({ billingMonth, _sum }) => {
+    const monthIndex = new Date(billingMonth).getMonth(); // Get the month index
+    result[monthIndex].billing = _sum.amount || 0;
+  });
+
+  return result;
+};

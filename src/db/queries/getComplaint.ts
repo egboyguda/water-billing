@@ -41,3 +41,29 @@ export const getAllComplaints = async () => {
   const complaints = await db.complaint.findMany();
   return complaints;
 };
+
+export const getComplaintCountsByStatus = async () => {
+  // Group complaints by status and count them
+  const complaintCounts = await db.complaint.groupBy({
+    by: ["status"], // Group by the `status` field
+    _count: {
+      status: true, // Count the number of complaints for each status
+    },
+  });
+
+  // Convert the result into a more readable format
+  const result = {
+    pending: 0,
+    resolved: 0,
+  };
+
+  complaintCounts.forEach((item) => {
+    if (item.status === "PENDING") {
+      result.pending = item._count.status;
+    } else if (item.status === "RESOLVED") {
+      result.resolved = item._count.status;
+    }
+  });
+
+  return result;
+};

@@ -23,29 +23,31 @@ export default async function ComplaintsTabs() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    {session?.role === "ADMIN" ? <TableHead>User Name</TableHead> : null}
+                                    {session?.role === "ADMIN" || session?.role === "MANAGER" ? <TableHead>User Name</TableHead> : null}
                                     <TableHead>Issue</TableHead>
                                     <TableHead>Description</TableHead>
                                     <TableHead>Status</TableHead>
-                                    <TableHead>Actions</TableHead>
+                                    {session?.role === "ADMIN" ? <TableHead>Actions</TableHead> : null}
+
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {pendingComplaints.map((complaint) => (
                                     <TableRow key={complaint.id}>
 
-                                        {session?.role === "ADMIN" ? (
+                                        {session?.role === "ADMIN" || session?.role === "MANAGER" ? (
                                             <TableCell>{complaint.profile.name}</TableCell>
                                         ) : null}
                                         <TableCell>{complaint.name}</TableCell>
                                         <TableCell>{complaint.description}</TableCell>
                                         <TableCell><span className="bg-yellow-500 p-2 text-white rounded-sm">{complaint.status}</span></TableCell>
                                         <TableCell>
-                                            <div className="flex gap-2">
-                                                {session?.role === 'ADMIN' || session?.role === "MANAGER" ? <ChangeStatusDialogComplaint Id={complaint.id} /> : null}
+                                            {session?.role === "ADMIN" ?
+                                                <div className="flex gap-2">
+                                                    <ChangeStatusDialogComplaint Id={complaint.id} />
 
-                                                <button className="btn bg-white p-2 rounded border">Delete</button>
-                                            </div>
+                                                    <button className="btn bg-white p-2 rounded border">Delete</button>
+                                                </div> : null}
                                         </TableCell>
                                     </TableRow>
                                 ))}
