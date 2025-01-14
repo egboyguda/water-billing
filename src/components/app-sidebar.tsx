@@ -71,7 +71,7 @@ const data = {
         },
         {
           title: "Profile",
-          url: "#",
+          url: "/profile",
           icon: UserRoundPen,
         },
 
@@ -104,7 +104,7 @@ const data = {
         },
         {
           title: "Profile",
-          url: "#",
+          url: "/profile",
           icon: UserRoundPen,
         },
       ],
@@ -150,6 +150,11 @@ const data = {
           title: "Complaints",
           url: "/complaint",
           icon: MessageSquareWarning,
+        },
+        {
+          title: "Profile",
+          url: "/profile",
+          icon: UserRoundPen,
         },
       ]
     }

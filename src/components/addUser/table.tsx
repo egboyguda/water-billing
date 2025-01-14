@@ -1,19 +1,37 @@
-import { getUserAdminManagerCollector } from "@/db/queries/getUser";
+import { getUserAdminManagerCollector, UserData } from "@/db/queries/getUser";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import { Button } from "@/components/ui/button"; // Import your Button component
+// Import your Button component
 import { DialogUser } from "./dialogUser";
+import DeleteBtn from "../costomer/deletebtn";
 
-export default async function Usertable() {
-    const usersResult = await getUserAdminManagerCollector();
+interface UserTableProps {
+    fetchData?: () => Promise<UserData[]>;
+}
 
-    if (!usersResult.success) {
-        return <div>Error: {usersResult.message}</div>; // Handle errors
+export default async function Usertable({ fetchData }: UserTableProps) {
+    let users: UserData[] = [];
+
+    try {
+        // Use fetchData if provided; otherwise, fallback to getUserAdminManagerCollector
+        if (fetchData) {
+            users = await fetchData();
+        }
+
+        if (!users || users.length === 0) {
+            const fallbackResult = await getUserAdminManagerCollector();
+            if (fallbackResult.success && fallbackResult.users) {
+                users = fallbackResult.users;
+            } else {
+                return <div>Error: {fallbackResult.message || "Failed to fetch users."}</div>;
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        return <div>Error: Failed to load user data.</div>;
     }
 
-    const users = usersResult.users;
-
-    if (!users || users.length === 0) {
-        return <div>No users found.</div>; // Handle empty data
+    if (users.length === 0) {
+        return <div>No users found.</div>;
     }
 
     return (
@@ -28,14 +46,14 @@ export default async function Usertable() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {users.map((user) => ( // Map over the users array
+                    {users.map((user) => (
                         <TableRow key={user.id}>
                             <TableCell>{user.username}</TableCell>
                             <TableCell>{user.role}</TableCell>
                             <TableCell>
                                 <div className="flex gap-2">
-                                    <DialogUser userId={user.id} username={user.username} /> {/* Use Button component */}
-                                    <Button variant="destructive">Delete</Button> {/* Use Button component */}
+                                    <DialogUser userId={user.id} username={user.username} />
+                                    <DeleteBtn userId={user.id} />
                                 </div>
                             </TableCell>
                         </TableRow>

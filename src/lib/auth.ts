@@ -37,11 +37,12 @@ export async function createSession(userId: string, role: string) {
   const expires = new Date(Date.now() + 60 * 60 * 1000);
   const session = await encrypt({ userId, expires, role });
   const cookieStore = await cookies();
-  cookieStore.set("session", session, {
+  await cookieStore.set("session", session, {
     httpOnly: true,
     secure: true,
     expires: expires,
     sameSite: "lax",
     path: "/",
   });
+  console.log("cookie set");
 }

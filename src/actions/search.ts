@@ -19,3 +19,14 @@ export async function filterBills(formData: FormData) {
   }
   redirect(`/billing/search?status=${status}&term=${term}`);
 }
+
+// search user
+
+export async function searchUser(formData: FormData) {
+  const term = formData.get("term");
+
+  if (typeof term !== "string") {
+    redirect("/add");
+  }
+  redirect(`/add/search?term=${term}`);
+}

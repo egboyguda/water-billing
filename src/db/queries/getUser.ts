@@ -2,12 +2,12 @@ import { verifySession } from "@/lib/dal";
 import { cache } from "react";
 import { db } from "..";
 
-interface UserData {
+export type UserData = {
   id: string;
   username: string;
 
   role: string;
-}
+};
 
 interface UserResult {
   message?: string;
@@ -75,5 +75,45 @@ export const getUserAdminManagerCollector = async (): Promise<UserResult> => {
       users: [],
       message: "Failed to fetch users.",
     };
+  }
+};
+
+export const searchUser = async (term: string): Promise<UserData[]> => {
+  try {
+    const session = await verifySession();
+
+    if (!session?.userId) {
+      throw new Error("User not authenticated.");
+    }
+
+    if (session.role !== "ADMIN" && session.role !== "MANAGER") {
+      throw new Error("You are not authorized to perform this action.");
+    }
+
+    const users = await db.user.findMany({
+      where: {
+        OR: [
+          {
+            username: {
+              contains: term,
+              mode: "insensitive",
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        username: true,
+        role: true,
+      },
+      orderBy: {
+        username: "asc",
+      },
+    });
+
+    return users as UserData[]; // Ensure it matches the UserData type
+  } catch (error) {
+    console.error("Error searching for users:", error);
+    throw error; // Let the caller handle the error
   }
 };

@@ -52,9 +52,10 @@ export async function loginActions(
     };
   }
   //create session
-  console.log(compareSync(result.data.password, user.password));
+  //console.log(compareSync(result.data.password, user.password));
   const userId = user.id.toString();
   await createSession(userId, user.role.toString());
+  console.log(user.role);
   if (user.role === "ADMIN") {
     redirect("/");
   } else if (user.role === "MANAGER") {
