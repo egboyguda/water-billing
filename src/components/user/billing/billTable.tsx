@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 
 import { generatePDF } from "@/utils/generatePdf";
+import Link from "next/link";
 // Import the function
 interface BillWithUsageAndProfileName {
     // Correct Interface
@@ -58,6 +59,8 @@ export default function BillTable({ bills, cost }: BillTableProps) {
                                 <Button onClick={() => generatePDF(bill, cost)}>Download Invoice</Button>
                             </div>
                         </TableCell>
+
+                        {bill.status === "UNPAID" ? <TableCell><Link href={'/pay'}><Button>Pay</Button></Link></TableCell> : null}
                     </TableRow>
                 ))}
             </TableBody>

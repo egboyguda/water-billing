@@ -1,7 +1,7 @@
 'use client'
 
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
-import { use, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 const CheckoutPage = ({ amount }: { amount: number }) => {
     const stripe = useStripe()
@@ -63,8 +63,8 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
         {errorMessage && <p>{errorMessage}</p>}
 
 
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit" disabled={isProcessing}>
-            {!isProcessing ? 'pay ' : 'processing'}
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  mt-4 rounded" type="submit" disabled={isProcessing}>
+            {!isProcessing ? `Pay the Amount of ${amount} ` : 'processing'}
         </button>
     </form>)
 
